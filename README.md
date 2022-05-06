@@ -68,6 +68,11 @@ Add additional notes about how to deploy this on a live system
 
 * [Maven](https://maven.apache.org/) - Dependency Management
 
+## Built With
+
+* [Jira](https://atlassian.net/jira/) - Kanban board and epic/stories visualisation
+* [Github](https://github.com/) - Repository management and integration with jira for automatic Jira update
+
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning.
