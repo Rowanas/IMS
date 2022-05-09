@@ -32,7 +32,9 @@ public class DBUtils {
 		}
 		this.dbUrl = dbProps.getProperty("db.url", "");
 		this.dbUser = dbProps.getProperty("db.user", "");
-		this.dbPassword = dbProps.getProperty("db.password", "");
+		this.dbPassword = dbProps.getProperty("db.password", ""); //changed from default password to mine
+		//also had issue with timezone mismatch, so fixed that with Pawel's help.
+		
 	}
 
 	public DBUtils() {
