@@ -2,48 +2,56 @@ package com.qa.ims.persistence.domain;
 
 import java.util.Objects;
 
+//tore the arraylist out of my orders to simplify, hopefully my code will still work
 public class Order {
 
-	private Long orderid;
-	private String orderItemid;
+	private Long orderID;
+	private Long orderItemsID;
 	private Double totalPrice;
-	private String customerid;
-	
-	public Order(Long orderid, String orderItemid, Double totalPrice, String customerid) {
+	private Long customerID;
+
+	public Order(Long orderID, Long orderItemsID, Double totalPrice, Long customerID) {
 		super();
-		this.orderid = orderid;
-		this.orderItemid = orderItemid;
+		this.orderID = orderID;
+		this.orderItemsID = orderItemsID;
 		this.totalPrice = totalPrice;
-		this.customerid = customerid;
+		this.customerID = customerID;
 	}
 
-	public Order(String orderItemid, Double totalPrice, String customerid) {
+	public Order(Long orderItemsID, Double totalPrice, Long customerID) {
 		super();
-		this.orderItemid = orderItemid;
+		this.orderItemsID = orderItemsID;
 		this.totalPrice = totalPrice;
-		this.customerid = customerid;
+		this.customerID = customerID;
+
 	}
 
-	@Override
-	public String toString() {
-		return "Order [orderid=" + orderid + ", orderItemid=" + orderItemid + ", totalPrice= £" + totalPrice
-				+ ", customerid=" + customerid + "]";
+	public Order(Long orderID, Long customerID, Long orderItemsID) {
+		super();
+		this.orderID = orderID;
+		this.orderItemsID = orderItemsID;
+		this.customerID = customerID;
 	}
 
-	public Long getOrderid() {
-		return orderid;
+	public Order(Long customerID) {
+		super();
+		this.customerID = customerID;
 	}
 
-	public void setOrderid(Long orderid) {
-		this.orderid = orderid;
+	public Long getOrderID() {
+		return orderID;
 	}
 
-	public String getOrderItemid() {
-		return orderItemid;
+	public void setOrderID(Long orderID) {
+		this.orderID = orderID;
 	}
 
-	public void setOrderItemid(String orderItemid) {
-		this.orderItemid = orderItemid;
+	public Long getorderItemsID() {
+		return orderItemsID;
+	}
+
+	public void setorderItemsID(Long orderItemsID) {
+		this.orderItemsID = orderItemsID;
 	}
 
 	public Double getTotalPrice() {
@@ -54,17 +62,28 @@ public class Order {
 		this.totalPrice = totalPrice;
 	}
 
-	public String getCustomerid() {
-		return customerid;
+	public Long getCustomerID() {
+		return customerID;
 	}
 
-	public void setCustomerid(String customerid) {
-		this.customerid = customerid;
+	public void setCustomerID(Long customerID) {
+		this.customerID = customerID;
+	}
+
+	public Order() {
+		super();
+
+	}
+
+	@Override
+	public String toString() {
+		return "Order [orderID=" + orderID + ", orderItemsID=" + orderItemsID + ", totalPrice=" + totalPrice
+				+ ", customerID=" + customerID + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(customerid, orderItemid, orderid, totalPrice);
+		return Objects.hash(customerID, orderID, orderItemsID, totalPrice);
 	}
 
 	@Override
@@ -76,8 +95,7 @@ public class Order {
 		if (getClass() != obj.getClass())
 			return false;
 		Order other = (Order) obj;
-		return Objects.equals(customerid, other.customerid) && Objects.equals(orderItemid, other.orderItemid)
-				&& Objects.equals(orderid, other.orderid) && Objects.equals(totalPrice, other.totalPrice);
+		return Objects.equals(customerID, other.customerID) && Objects.equals(orderID, other.orderID)
+				&& Objects.equals(orderItemsID, other.orderItemsID) && Objects.equals(totalPrice, other.totalPrice);
 	}
-	
 }

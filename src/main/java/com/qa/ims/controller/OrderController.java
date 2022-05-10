@@ -6,14 +6,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.persistence.dao.OrderDAO;
+import com.qa.ims.persistence.domain.Item;
 import com.qa.ims.persistence.domain.Order;
 import com.qa.ims.utils.Utils;
 
-public class OrderController {
+public class OrderController implements CrudController<Order> {
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
-	private ItemDAO orderDAO;
+	private OrderDAO orderDAO;
 	private Utils utils;
 
 	public OrderController(OrderDAO orderDAO, Utils utils) {
@@ -26,54 +27,55 @@ public class OrderController {
 	 * Reads all items to the logger
 	 */
 	@Override
-	public List<Item> readAll() {
-		List<Item> orders = orderDAO.readAll();
-		for (Item order : orders) {
+	public List<Order> readAll() {
+		List<Order> orders = orderDAO.readAll();
+		for (Order order : orders) {
 			LOGGER.info(order);
 		}
-		return order;
+		return orders;
 	}
 
 // Creates a single item order by taking user input. Currently then separate methods
-// for addin/removing further items, but would like to call those methods from this
+// for adding/removing further items, but would like to call those methods from this
 // create if time later. Jira task added.
+	
+// After talking with Pawel, he suggested add/remove method would probably be the better
+// choice, and on re-examination, might not be any harder.
 	@Override
 	public Order create() {
 		LOGGER.info("Please enter a customer ID");
-		Double customerID = utils.getDouble();
-		LOGGER.info("Please enter an item ID");
-		Double itemID = utils.getDouble();
-		Order order = orderDAO.create(new Order(customerID, itemID));
-		LOGGER.info("Item created");
+		Long customerID = utils.getLong();
+		Order order = orderDAO.create(new Order(customerID));
+		LOGGER.info("Order created");
 		return order;
 	}
 
 	/**
 	 * Updates an existing item by taking in user input
 	 */
-	@Override
+
 	public Order updateAdd() {
-		LOGGER.info("Please enter the id of the order you would like to update");
+		LOGGER.info("Please enter the id of the order to which you would like to add an item");
 		Long id = utils.getLong();
 		LOGGER.info("Please enter an order ID");
-		String itemName = utils.getString();
-		LOGGER.info("Please enter an item");
-		Double itemPrice = utils.getDouble();
-		Item item = itemDAO.update(new Item(id, itemName, itemPrice));
-		LOGGER.info("Item Updated");
-		return item;
+		Long itemName = utils.getLong();
+		LOGGER.info("Please enter an item ID");
+		Long itemID = utils.getLong();
+		Order order = orderDAO.updateAdd(null);
+		LOGGER.info("Order Updated");
+		return order;
 	}
 
-	public Item updateRemove() {
-		LOGGER.info("Please enter the id of the order you would like to update");
+	public Order updateRemove() {
+		LOGGER.info("Please enter the id of the order from which you would like to remove an item");
 		Long id = utils.getLong();
 		LOGGER.info("Please enter an order ID");
-		String itemName = utils.getString();
+		Long orderID = utils.getLong();
 		LOGGER.info("Please enter an item");
-		Double itemPrice = utils.getDouble();
-		Item item = itemDAO.update(new Item(id, itemName, itemPrice));
-		LOGGER.info("Item Updated");
-		return item;
+		Double itemID = utils.getDouble();
+		Order order = orderDAO.updateRemove(null);
+		LOGGER.info("Order Updated");
+		return order;
 	}
 
 	/**
@@ -86,5 +88,11 @@ public class OrderController {
 		LOGGER.info("Please enter the id of the order you would like to delete");
 		Long id = utils.getLong();
 		return orderDAO.delete(id);
+	}
+
+	@Override
+	public Order update() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
