@@ -17,6 +17,9 @@ import com.qa.ims.utils.DBUtils;
 
 public class CustomerDAO implements Dao<Customer> {
 
+	//Throughout this, and other customer files, I've changed the suggested firstName to forename, as
+	//it matches its sibling surname better in format, and ensures consistency throughout my code.
+	
 	public static final Logger LOGGER = LogManager.getLogger();
 
 	@Override
@@ -99,13 +102,7 @@ public class CustomerDAO implements Dao<Customer> {
 		return null;
 	}
 
-	/**
-	 * Updates a customer in the database
-	 * 
-	 * @param customer - takes in a customer object, the id field will be used to
-	 *                 update that customer in the database
-	 * @return
-	 */
+	// I hadn't changed id to customer_id after naming it customer_id in my database, so this wasn't working at all.
 	@Override
 	public Customer update(Customer customer) {
 		try (Connection connection = DBUtils.getInstance().getConnection();

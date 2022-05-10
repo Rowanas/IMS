@@ -1,0 +1,12 @@
+Development Diary begun 10/05/2022 in response to design decision that had not been obvious.
+
+10/05/2022
+Encountered possibility I hadn't previously considered. Is it better to update CRUDController and use in Orders for "delete item within order" as opposed to pre-existing "delete order" or just create new methods within the approipriate order classes.
+
+Also encountered issue with orders, attempting to incorporate orderitems into my java. Wrote code that does not meet spec at the momen,t as placeholder and to test later logic works correctly. Will update within spec before finishing, obviously.
+
+Further to issue above, currently using separate methods for adding and removing item after order creation, but may well change.
+
+Distracted by QA contract coming through - took time to read that, which delayed development by an hour.
+
+Realised that initial UML hadn't been stored in UML folder, so hadn't been uploaded with other information.
