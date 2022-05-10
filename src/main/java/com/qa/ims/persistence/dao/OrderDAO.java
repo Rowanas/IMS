@@ -21,6 +21,38 @@ public class OrderDAO implements Dao<Order> {
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
+	@Override
+	public Order modelFromResultSet(ResultSet resultSet) throws SQLException {
+		Long orderID = resultSet.getLong("order_id");
+		Long customerID = resultSet.getLong("customer_id");
+		Long itemID = resultSet.getLong("item_id");
+		return new Order(orderID, customerID, itemID);
+	}
+	
+	public Item itemFromResultSet(ResultSet resultSet) throws SQLException {
+		Long itemID = resultSet.getLong("item_ID");
+		String itemName = resultSet.getString("item_name");
+		Double itemPrice = resultSet.getDouble("item_price");
+		return new Item(itemID, itemName, itemPrice);
+	}
+
+	private Item getItems(Long orderID) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection
+						.prepareStatement("SELECT * FROM order_items WHERE order_item_id = ?");) {
+			statement.setLong(1, orderID);
+			try (ResultSet resultSet = statement.executeQuery();) {
+				resultSet.next();
+				return itemFromResultSet(resultSet);
+			}
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+	}
+
+//moved all read items down here, for readability and to keep like-methods grouped.
 	public Order readCustomer(Long customerID) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
@@ -66,38 +98,7 @@ public class OrderDAO implements Dao<Order> {
 		}
 		return null;
 	}
-
-	@Override
-	public Order modelFromResultSet(ResultSet resultSet) throws SQLException {
-		Long orderID = resultSet.getLong("order_id");
-		Long customerID = resultSet.getLong("customer_id");
-		Long itemID = resultSet.getLong("item_id");
-		return new Order(orderID, customerID, itemID);
-	}
 	
-	public Item itemFromResultSet(ResultSet resultSet) throws SQLException {
-		Long itemID = resultSet.getLong("item_ID");
-		String itemName = resultSet.getString("item_name");
-		Double itemPrice = resultSet.getDouble("item_price");
-		return new Item(itemID, itemName, itemPrice);
-	}
-
-	private Item getItems(Long orderID) {
-		try (Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection
-						.prepareStatement("SELECT * FROM order_items WHERE order_item_id = ?");) {
-			statement.setLong(1, orderID);
-			try (ResultSet resultSet = statement.executeQuery();) {
-				resultSet.next();
-				return itemFromResultSet(resultSet);
-			}
-		} catch (Exception e) {
-			LOGGER.debug(e);
-			LOGGER.error(e.getMessage());
-		}
-		return null;
-	}
-
 	// reads all existent orders
 	@Override
 	public List<Order> readAll() {
@@ -129,8 +130,6 @@ public class OrderDAO implements Dao<Order> {
 		}
 		return null;
 	}
-
-// 
 
 	@Override
 	public Order create(Order order) {
@@ -176,7 +175,7 @@ public class OrderDAO implements Dao<Order> {
 		return null;
 	}
 
-	//deletes all of an item_id from a given order.  not ideal, but I was so stuck and I had dogs barking and all sorts.
+	//10/05 deletes all of an item_id from a given order.  Not ideal, but I was so stuck and I had dogs barking and all sorts. Will return, maybe.
 	public Order updateRemove(Order order) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement("DELETE FROM order_items WHERE order_id = ? and item_id = ?");) {
@@ -188,11 +187,6 @@ public class OrderDAO implements Dao<Order> {
 		return null;
 	}
 
-	/**
-	 * Deletes an item in the database
-	 * 
-	 * @param id - id of the item
-	 */
 	@Override
 	public int delete(long id) {
 		try (Connection connection = DBUtils.getInstance().getConnection();

@@ -2,7 +2,8 @@ package com.qa.ims.persistence.domain;
 
 import java.util.Objects;
 
-//tore the arraylist out of my orders to simplify, hopefully my code will still work
+//10/05 tore the arraylist out of my orders to simplify, hopefully my code will still work
+//10/05 End of day addendum - still works, but not perfectly due to missing method
 public class Order {
 
 	private Long orderID;
@@ -23,7 +24,6 @@ public class Order {
 		this.orderItemsID = orderItemsID;
 		this.totalPrice = totalPrice;
 		this.customerID = customerID;
-
 	}
 
 	public Order(Long orderID, Long customerID, Long orderItemsID) {
