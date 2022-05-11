@@ -20,36 +20,44 @@ import com.qa.ims.utils.DBUtils;
 public class OrderDAO implements Dao<Order> {
 
 	public static final Logger LOGGER = LogManager.getLogger();
-
+	
+	private CustomerDAO customerDAO;
+	private ItemDAO itemDAO;
+	
+	
+	
 	@Override
 	public Order modelFromResultSet(ResultSet resultSet) throws SQLException {
 		Long orderID = resultSet.getLong("order_id");
 		Long customerID = resultSet.getLong("customer_id");
-		Long itemID = resultSet.getLong("item_id");
-		return new Order(orderID, customerID, itemID);
-	}
-	
-	public Item itemFromResultSet(ResultSet resultSet) throws SQLException {
-		Long itemID = resultSet.getLong("item_ID");
-		String itemName = resultSet.getString("item_name");
-		Double itemPrice = resultSet.getDouble("item_price");
-		return new Item(itemID, itemName, itemPrice);
+		return new Order(orderID, customerID);
 	}
 
-	private Item getItems(Long orderID) {
+	public Item itemFromResultSet(ResultSet resultSet) throws SQLException {
+		String itemName = resultSet.getString("item_name");
+		Double itemPrice = resultSet.getDouble("item_price");
+		return new Item(itemName, itemPrice);
+	}
+
+	private List<Item> getItems(Long orderID) {
+		List<Long> items = new ArrayList<>();
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
-						.prepareStatement("SELECT * FROM order_items WHERE order_item_id = ?");) {
-			statement.setLong(1, orderID);
+						.prepareStatement("SELECT * FROM order_items WHERE order_id =" + orderID);) {
 			try (ResultSet resultSet = statement.executeQuery();) {
-				resultSet.next();
-				return itemFromResultSet(resultSet);
+				while (resultSet.next()) {
+					items.add(resultSet.getLong("item_id"));
+				}
+			} catch (Exception e) {
+				LOGGER.debug(e);
+				LOGGER.error(e.getMessage());
 			}
-		} catch (Exception e) {
-			LOGGER.debug(e);
-			LOGGER.error(e.getMessage());
+			List<Item> orderItemList = new ArrayList<>();
+			for (Long i : items) {
+				items.add(itemDAO.read(i));
+			}
 		}
-		return null;
+		return items;
 	}
 
 //moved all read items down here, for readability and to keep like-methods grouped.
@@ -98,7 +106,7 @@ public class OrderDAO implements Dao<Order> {
 		}
 		return null;
 	}
-	
+
 	// reads all existent orders
 	@Override
 	public List<Order> readAll() {
@@ -135,9 +143,8 @@ public class OrderDAO implements Dao<Order> {
 	public Order create(Order order) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
-						.prepareStatement("INSERT INTO orders(total_price, customer_id) VALUES (?, ?)");) {
-			statement.setDouble(1, order.getTotalPrice());
-			statement.setLong(2, order.getCustomerID());
+						.prepareStatement("INSERT INTO orders( customer_id) VALUES (?)");) {
+			statement.setLong(1, order.getCustomerID());
 			statement.executeUpdate();
 			return readLatest();
 		} catch (Exception e) {
@@ -163,7 +170,8 @@ public class OrderDAO implements Dao<Order> {
 
 	public Order updateAdd(Order order) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement("INSERT order_items SET item_id = ? WHERE order_id = ?");) {
+				PreparedStatement statement = connection
+						.prepareStatement("INSERT order_items SET item_id = ? WHERE order_id = ?");) {
 			statement.setObject(1, order.getorderItemsID());
 			statement.setObject(2, order.getOrderID());
 			statement.executeUpdate();
@@ -175,10 +183,12 @@ public class OrderDAO implements Dao<Order> {
 		return null;
 	}
 
-	//10/05 deletes all of an item_id from a given order.  Not ideal, but I was so stuck and I had dogs barking and all sorts. Will return, maybe.
+	// 10/05 deletes all of an item_id from a given order. Not ideal, but I was so
+	// stuck and I had dogs barking and all sorts. Will return, maybe.
 	public Order updateRemove(Order order) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement("DELETE FROM order_items WHERE order_id = ? and item_id = ?");) {
+				PreparedStatement statement = connection
+						.prepareStatement("DELETE FROM order_items WHERE order_id = ? and item_id = ?");) {
 			statement.executeUpdate();
 			return read(order.getorderItemsID());
 		} catch (Exception e) {

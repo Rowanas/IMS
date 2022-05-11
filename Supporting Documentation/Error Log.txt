@@ -1,0 +1,19 @@
+Error log and fixes
+
+TESTING
+Column "CUSTOMER_ID" not found; SQL statement:
+SELECT * FROM customers ORDER BY customer_id DESC LIMIT 1 [42122-200]
+Column "CUSTOMER_ID" not found; SQL statement:
+SELECT * FROM customers WHERE customer_id = ? [42122-200]
+Column "customer_id" not found [42122-200]
+Column "CUSTOMER_ID" not found; SQL statement:
+SELECT * FROM customers ORDER BY customer_id DESC LIMIT 1 [42122-200]
+Column "CUSTOMER_ID" not found; SQL statement:
+DELETE FROM customers WHERE customer_id = ? [42122-200]
+Column "CUSTOMER_ID" not found; SQL statement:
+UPDATE customers SET forename = ?, surname = ? WHERE customer_id = ? [42122-200]
+
+Initial checks
+The customer controller tests work fine, but the customer DAO doesn't. Not finding column, checked names and seems fine, suspect not connecting to DB properly.
+
+Fix

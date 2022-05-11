@@ -32,6 +32,12 @@ public class Order {
 		this.orderItemsID = orderItemsID;
 		this.customerID = customerID;
 	}
+	
+	public Order(Long orderID, Long customerID) {
+		super();
+		this.orderID = orderID;
+		this.customerID = customerID;
+	}
 
 	public Order(Long customerID) {
 		super();
@@ -77,8 +83,7 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return "Order [orderID=" + orderID + ", orderItemsID=" + orderItemsID + ", totalPrice=" + totalPrice
-				+ ", customerID=" + customerID + "]";
+		return "Order [orderID=" + orderID + ", customerID=" + customerID + "]";
 	}
 
 	@Override

@@ -1,4 +1,5 @@
-DROP SCHEMA IF EXISTS ims;
+DROP SCHEMA IF EXISTS ims; 
+SET @@global.time_zone = '+00:00';
 
 CREATE SCHEMA IF NOT EXISTS `ims`;
 

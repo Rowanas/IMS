@@ -68,5 +68,9 @@ public class Item {
 				&& Objects.equals(itemPrice, other.itemPrice);
 	}
 
+	public static void add(long long1) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
