@@ -38,7 +38,7 @@ public class OrderController implements CrudController<Order> {
 // Creates a single item order by taking user input. Currently then separate methods
 // for adding/removing further items, but would like to call those methods from this
 // create if time later. Jira task added.
-	
+
 // After talking with Pawel, he suggested add/remove method would probably be the better
 // choice, and on re-examination, might not be any harder.
 	@Override
@@ -54,30 +54,6 @@ public class OrderController implements CrudController<Order> {
 	 * Updates an existing item by taking in user input
 	 */
 
-	public Order updateAdd() {
-		LOGGER.info("Please enter the id of the order to which you would like to add an item");
-		Long id = utils.getLong();
-		LOGGER.info("Please enter an order ID");
-		Long itemName = utils.getLong();
-		LOGGER.info("Please enter an item ID");
-		Long itemID = utils.getLong();
-		Order order = orderDAO.updateAdd(null);
-		LOGGER.info("Order Updated");
-		return order;
-	}
-
-	public Order updateRemove() {
-		LOGGER.info("Please enter the id of the order from which you would like to remove an item");
-		Long id = utils.getLong();
-		LOGGER.info("Please enter an order ID");
-		Long orderID = utils.getLong();
-		LOGGER.info("Please enter an item");
-		Double itemID = utils.getDouble();
-		Order order = orderDAO.updateRemove(null);
-		LOGGER.info("Order Updated");
-		return order;
-	}
-
 	/**
 	 * Deletes an existing item by the id of the item
 	 * 
@@ -92,7 +68,33 @@ public class OrderController implements CrudController<Order> {
 
 	@Override
 	public Order update() {
-		// TODO Auto-generated method stub
+		Double itemID = utils.getDouble();
+		Long order = utils.getLong();
+		LOGGER.info("Please enter the id of the order you would like to update");
+		Long id = utils.getLong();
+		LOGGER.info("Please enter Add to add an item, or Remove to remove an item");
+		String addRemove = utils.getString();
+		switch (addRemove) {
+		case "add":
+			LOGGER.info("Please enter an item ID");
+			itemID = utils.getDouble();
+			order = orderDAO.updateAdd(order);
+			LOGGER.info("Order Updated");
+			break;
+// For some reason, my Add code threw no errors, but my remove code did. Odd behaviour.			
+		case "remove":
+			LOGGER.info("Please enter an item ID");
+			itemID = utils.getDouble();
+			order = orderDAO.updateRemove(itemID);
+			LOGGER.info("Order Updated");
+			break;
+
+		default:
+			LOGGER.info("Please enter an item ID");
+			itemID = utils.getDouble();
+			LOGGER.info("Order Updated");
+			break;
+		}
 		return null;
 	}
 }

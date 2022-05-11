@@ -20,12 +20,16 @@ import com.qa.ims.utils.DBUtils;
 public class OrderDAO implements Dao<Order> {
 
 	public static final Logger LOGGER = LogManager.getLogger();
-	
+
 	private CustomerDAO customerDAO;
 	private ItemDAO itemDAO;
-	
-	
-	
+
+	public OrderDAO(CustomerDAO customerDAO, ItemDAO itemDAO) {
+		super();
+		this.customerDAO = customerDAO;
+		this.itemDAO = itemDAO;
+	}
+
 	@Override
 	public Order modelFromResultSet(ResultSet resultSet) throws SQLException {
 		Long orderID = resultSet.getLong("order_id");
@@ -39,25 +43,25 @@ public class OrderDAO implements Dao<Order> {
 		return new Item(itemName, itemPrice);
 	}
 
-	private List<Item> getItems(Long orderID) {
-		List<Long> items = new ArrayList<>();
+	private List<Item> getItems(Long orderID) throws SQLException {
+		List<Long> itemsID = new ArrayList<>();
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
 						.prepareStatement("SELECT * FROM order_items WHERE order_id =" + orderID);) {
 			try (ResultSet resultSet = statement.executeQuery();) {
 				while (resultSet.next()) {
-					items.add(resultSet.getLong("item_id"));
+					itemsID.add(resultSet.getLong("item_id"));
 				}
 			} catch (Exception e) {
 				LOGGER.debug(e);
 				LOGGER.error(e.getMessage());
 			}
 			List<Item> orderItemList = new ArrayList<>();
-			for (Long i : items) {
-				items.add(itemDAO.read(i));
+			for (Long i : itemsID) {
+				orderItemList.add(itemDAO.read(i));
 			}
+			return orderItemList;
 		}
-		return items;
 	}
 
 //moved all read items down here, for readability and to keep like-methods grouped.
@@ -168,33 +172,33 @@ public class OrderDAO implements Dao<Order> {
 		return null;
 	}
 
-	public Order updateAdd(Order order) {
+	public Order updateAdd(Long orderID, Long itemID) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
-						.prepareStatement("INSERT order_items SET item_id = ? WHERE order_id = ?");) {
-			statement.setObject(1, order.getorderItemsID());
-			statement.setObject(2, order.getOrderID());
+						.prepareStatement("INSERT INTO order_items (order_id, item_id VALUES(?,?)");) {
+			statement.setObject(1, orderID);
+			statement.setObject(2, itemID);
 			statement.executeUpdate();
-			return read(order.getorderItemsID());
 		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
-		return null;
+		return read(orderID);
 	}
 
 	// 10/05 deletes all of an item_id from a given order. Not ideal, but I was so
 	// stuck and I had dogs barking and all sorts. Will return, maybe.
-	public Order updateRemove(Order order) {
+	public Order updateRemove(Long orderID, Long itemID) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
 						.prepareStatement("DELETE FROM order_items WHERE order_id = ? and item_id = ?");) {
+			statement.setObject(1, orderID);
+			statement.setObject(2, itemID);
 			statement.executeUpdate();
-			return read(order.getorderItemsID());
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
-		return null;
+		return read(orderID);
 	}
 
 	@Override
