@@ -30,6 +30,10 @@ public class OrderDAO implements Dao<Order> {
 		this.itemDAO = itemDAO;
 	}
 
+	public OrderDAO() {
+		super();
+	}
+
 	@Override
 	public Order modelFromResultSet(ResultSet resultSet) throws SQLException {
 		Long orderID = resultSet.getLong("order_id");
@@ -43,11 +47,12 @@ public class OrderDAO implements Dao<Order> {
 		return new Item(itemName, itemPrice);
 	}
 
-	private List<Item> getItems(Long orderID) throws SQLException {
+	public List<Item> fetchItems(Long orderID) throws SQLException {
 		List<Long> itemsID = new ArrayList<>();
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
-						.prepareStatement("SELECT * FROM order_items WHERE order_id =" + orderID);) {
+						.prepareStatement("SELECT * FROM order_items WHERE order_id = ?");) {
+			statement.setLong(1,  orderID);
 			try (ResultSet resultSet = statement.executeQuery();) {
 				while (resultSet.next()) {
 					itemsID.add(resultSet.getLong("item_id"));
@@ -65,53 +70,24 @@ public class OrderDAO implements Dao<Order> {
 	}
 
 //moved all read items down here, for readability and to keep like-methods grouped.
-	public Order readCustomer(Long customerID) {
+	public List<Order> readItem() {
 		try (Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection
-						.prepareStatement("SELECT * FROM customers WHERE customer_id = ?");) {
-			statement.setLong(1, customerID);
-			try (ResultSet resultSet = statement.executeQuery();) {
-				resultSet.next();
-				return modelFromResultSet(resultSet);
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM order_items");) {
+			List<Order> order = new ArrayList<>();
+			while (resultSet.next()) {
+				order.add(modelFromResultSet(resultSet));
 			}
-		} catch (Exception e) {
+			return order;
+		} catch (SQLException e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
-		return null;
+		return new ArrayList<>();
 	}
+	
+//reads one specific order
 
-	public Order readItem(Long itemID) {
-		try (Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement("SELECT * FROM item WHERE item_id = ?");) {
-			statement.setLong(1, itemID);
-			try (ResultSet resultSet = statement.executeQuery();) {
-				resultSet.next();
-				return modelFromResultSet(resultSet);
-			}
-		} catch (Exception e) {
-			LOGGER.debug(e);
-			LOGGER.error(e.getMessage());
-		}
-		return null;
-	}
-
-	public Order read(Long orderID) {
-		try (Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement("SELECT * FROM item WHERE item_id = ?");) {
-			statement.setLong(1, orderID);
-			try (ResultSet resultSet = statement.executeQuery();) {
-				resultSet.next();
-				return modelFromResultSet(resultSet);
-			}
-		} catch (Exception e) {
-			LOGGER.debug(e);
-			LOGGER.error(e.getMessage());
-		}
-		return null;
-	}
-
-	// reads all existent orders
 	@Override
 	public List<Order> readAll() {
 		try (Connection connection = DBUtils.getInstance().getConnection();
@@ -126,6 +102,7 @@ public class OrderDAO implements Dao<Order> {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
+		readItem();
 		return new ArrayList<>();
 	}
 
@@ -155,6 +132,7 @@ public class OrderDAO implements Dao<Order> {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
+		readLatest();
 		return null;
 	}
 
@@ -175,7 +153,7 @@ public class OrderDAO implements Dao<Order> {
 	public Order updateAdd(Long orderID, Long itemID) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
-						.prepareStatement("INSERT INTO order_items (order_id, item_id VALUES(?,?)");) {
+						.prepareStatement("INSERT INTO order_items (order_id, item_id) VALUES(?,?)");) {
 			statement.setObject(1, orderID);
 			statement.setObject(2, itemID);
 			statement.executeUpdate();
@@ -183,7 +161,7 @@ public class OrderDAO implements Dao<Order> {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
-		return read(orderID);
+		return readLatest();
 	}
 
 	// 10/05 deletes all of an item_id from a given order. Not ideal, but I was so
@@ -198,7 +176,7 @@ public class OrderDAO implements Dao<Order> {
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
-		return read(orderID);
+		return readLatest();
 	}
 
 	@Override

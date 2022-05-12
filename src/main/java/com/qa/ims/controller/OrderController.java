@@ -65,35 +65,33 @@ public class OrderController implements CrudController<Order> {
 		Long id = utils.getLong();
 		return orderDAO.delete(id);
 	}
-
+//rewrote with toLowerCase and more elegant execution than multiple cases
+//to my knowledge, I am the only person to use switch cases, and testing it is
+// becoming difficult.
 	@Override
 	public Order update() {
-		Double itemID = utils.getDouble();
-		Long order = utils.getLong();
 		LOGGER.info("Please enter the id of the order you would like to update");
-		Long id = utils.getLong();
+		Long orderID = utils.getLong();
 		LOGGER.info("Please enter Add to add an item, or Remove to remove an item");
-		String addRemove = utils.getString();
+		String addRemove = utils.getString().toLowerCase();
 		switch (addRemove) {
 		case "add":
 			LOGGER.info("Please enter an item ID");
-			itemID = utils.getDouble();
-			order = orderDAO.updateAdd(order);
+			Long itemID = utils.getLong();
+			orderDAO.updateAdd(orderID, itemID);
 			LOGGER.info("Order Updated");
 			break;
 // For some reason, my Add code threw no errors, but my remove code did. Odd behaviour.			
 		case "remove":
 			LOGGER.info("Please enter an item ID");
-			itemID = utils.getDouble();
-			order = orderDAO.updateRemove(itemID);
+			itemID = utils.getLong();
+			orderDAO.updateRemove(orderID, itemID);
 			LOGGER.info("Order Updated");
 			break;
 
 		default:
-			LOGGER.info("Please enter an item ID");
-			itemID = utils.getDouble();
-			LOGGER.info("Order Updated");
-			break;
+			LOGGER.info("Please enter Add or Remove, lower or uppercase");
+
 		}
 		return null;
 	}

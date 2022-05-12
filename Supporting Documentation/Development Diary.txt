@@ -18,3 +18,7 @@ Major difficulties bashing through orders code today. To be honest, it's sapped 
 
 11/05/2022
 Began work again, after having quick check of orders, I decided to move to testing while awaiting word on an error. Lo and behold, the inbuilt customer tests against the inbuilt customer function aren't working. I am cursed, stupid, or both.
+
+Making good progress on testing on new branch.
+
+Rebuilt to test, everything broken. Not the end of the world though. After lunch, Pawel demonstrated solution using Eclipse-Maven-update

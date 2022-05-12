@@ -19,7 +19,6 @@ CREATE TABLE IF NOT EXISTS `item` (
 
 CREATE TABLE IF NOT EXISTS `orders` (
 	`order_id` INT AUTO_INCREMENT PRIMARY KEY,
-	`total_price` DOUBLE,
 	`customer_id` INT,
 	FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
 );

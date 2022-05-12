@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
-public class ItemTest {
+public class OrderTest {
 
 //	Looked this failure code up, not sure what's causing it. Seems to suggest
 //	incorrect java version? Documentation suggested in stacktrace has nothing on this error
