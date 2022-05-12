@@ -18,15 +18,15 @@ CREATE TABLE IF NOT EXISTS `item` (
 CREATE TABLE IF NOT EXISTS `orders` (
 	`order_id` INT AUTO_INCREMENT PRIMARY KEY,
 	`customer_id` INT,
-	FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+	FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `order_items` (
 	`order_item_id` INT AUTO_INCREMENT PRIMARY KEY,
 	`item_id` INT,
     `order_id` INT,
-    FOREIGN KEY (item_id) REFERENCES item(item_id),
-    FOREIGN KEY (order_id) REFERENCES orders(order_id)
+    FOREIGN KEY (item_id) REFERENCES item(item_id) ON DELETE CASCADE,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE
 );
 
 
