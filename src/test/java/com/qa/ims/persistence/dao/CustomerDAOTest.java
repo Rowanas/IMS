@@ -44,12 +44,11 @@ public class CustomerDAOTest {
 		final long ID = 1L;
 		assertEquals(new Customer(ID, "jordan", "harrison"), DAO.read(ID));
 	}
-
+// This has given me a lot of trouble
 	@Test
 	public void testUpdate() {
 		final Customer updated = new Customer(1L, "chris", "perrins");
 		assertEquals(updated, DAO.update(updated));
-
 	}
 
 	@Test
