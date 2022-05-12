@@ -56,9 +56,24 @@ public class OrderControllerTest {
 //split Long,string and double into separate sections.	
 
 	
-	public void testUpdateCore()	{
+	@Test
+	public void testUpdateAdd() {
 		Order updated = new Order();
 		Mockito.when(this.utils.getLong()).thenReturn(1L);
+		Mockito.when(this.utils.getString()).thenReturn("Add");
+		Mockito.when(this.utils.getLong()).thenReturn(1L);
+		assertEquals(updated, this.controller.update());
+		Mockito.verify(this.utils, Mockito.times(2)).getLong();
+		Mockito.verify(this.dao, Mockito.times(1)).update(updated);
+
+
+	}
+		
+	@Test
+	public void testUpdateRemove() {
+		Order updated = new Order();
+		Mockito.when(this.utils.getLong()).thenReturn(1L);
+		Mockito.when(this.utils.getString()).thenReturn("Remove");
 		Mockito.when(this.utils.getLong()).thenReturn(1L);
 		assertEquals(updated, this.controller.update());
 		Mockito.verify(this.utils, Mockito.times(2)).getLong();
@@ -66,22 +81,14 @@ public class OrderControllerTest {
 	}
 	
 	@Test
-	public void testUpdateAdd() {
-		Mockito.when(this.utils.getString()).thenReturn("Add");
-
-	}
-		
-	@Test
-	public void testUpdateRemove() {
-		testUpdateCore();
-		Mockito.when(this.utils.getString()).thenReturn("Remove");
-
-	}
-	
-	@Test
-	public void testUpdateOther() {
-		testUpdateCore();
-		Mockito.when(this.utils.getString()).thenReturn("Gobbledigook");
+	public void testUpdateDefault() {
+		Order updated = new Order();
+		Mockito.when(this.utils.getLong()).thenReturn(1L);
+		Mockito.when(this.utils.getString()).thenReturn("Gobblidook");
+		Mockito.when(this.utils.getLong()).thenReturn(1L);
+		assertEquals(updated, this.controller.update());
+		Mockito.verify(this.utils, Mockito.times(2)).getLong();
+		Mockito.verify(this.dao, Mockito.times(1)).update(updated);
 
 	}
 

@@ -38,14 +38,15 @@ public class OrderDAO implements Dao<Order> {
 	public Order modelFromResultSet(ResultSet resultSet) throws SQLException {
 		Long orderID = resultSet.getLong("order_id");
 		Long customerID = resultSet.getLong("customer_id");
-		return new Order(orderID, customerID);
+		List <Item> items = fetchItems(orderID);
+		return new Order(orderID, customerID, items);
 	}
-
-	public Item itemFromResultSet(ResultSet resultSet) throws SQLException {
-		String itemName = resultSet.getString("item_name");
-		Double itemPrice = resultSet.getDouble("item_price");
-		return new Item(itemName, itemPrice);
-	}
+//
+//	public Item itemFromResultSet(ResultSet resultSet) throws SQLException {
+//		String itemName = resultSet.getString("item_name");
+//		Double itemPrice = resultSet.getDouble("item_price");
+//		return new Item(itemName, itemPrice);
+//	}
 
 	public List<Item> fetchItems(Long orderID) throws SQLException {
 		List<Long> itemsID = new ArrayList<>();
@@ -70,22 +71,6 @@ public class OrderDAO implements Dao<Order> {
 	}
 
 //moved all read items down here, for readability and to keep like-methods grouped.
-	public List<Order> readItem() {
-		try (Connection connection = DBUtils.getInstance().getConnection();
-				Statement statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery("SELECT * FROM order_items");) {
-			List<Order> order = new ArrayList<>();
-			while (resultSet.next()) {
-				order.add(modelFromResultSet(resultSet));
-			}
-			return order;
-		} catch (SQLException e) {
-			LOGGER.debug(e);
-			LOGGER.error(e.getMessage());
-		}
-		return new ArrayList<>();
-	}
-	
 //reads one specific order
 
 	@Override
@@ -102,7 +87,6 @@ public class OrderDAO implements Dao<Order> {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
-		readItem();
 		return new ArrayList<>();
 	}
 
@@ -140,9 +124,9 @@ public class OrderDAO implements Dao<Order> {
 	public Order update(Order order) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement("UPDATE order_items SET item_id = ?");) {
-			statement.setObject(1, order.getorderItemsID());
+			statement.setObject(1, order.getOrderID());
 			statement.executeUpdate();
-			return read(order.getorderItemsID());
+			return read(order.getOrderID());
 		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
@@ -166,10 +150,11 @@ public class OrderDAO implements Dao<Order> {
 
 	// 10/05 deletes all of an item_id from a given order. Not ideal, but I was so
 	// stuck and I had dogs barking and all sorts. Will return, maybe.
+	// Discovered limit1 which prevents deletion of all problems
 	public Order updateRemove(Long orderID, Long itemID) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
-						.prepareStatement("DELETE FROM order_items WHERE order_id = ? and item_id = ?");) {
+						.prepareStatement("DELETE FROM order_items WHERE order_id = ? and item_id = ? LIMIT 1");) {
 			statement.setObject(1, orderID);
 			statement.setObject(2, itemID);
 			statement.executeUpdate();
@@ -190,6 +175,12 @@ public class OrderDAO implements Dao<Order> {
 			LOGGER.error(e.getMessage());
 		}
 		return 0;
+	}
+
+	@Override
+	public Order read(Long id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
