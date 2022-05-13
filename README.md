@@ -9,7 +9,11 @@ I have compiled my code into a FatJar for your convenience. You should only need
 
 ### Prerequisites
 
-You will require SQL Workbench to visualise the information in my sql-schema and sql-data files, though you can open these in your preferred IDE if you prefer. For testing, Maven will be required.
+You will require SQL Workbench to visualise the information in my sql-schema and sql-data files, though you can open these in your preferred IDE if you prefer. For testing, Maven will be required. gitBash required to build in bash or console.
+
+### Building
+
+To build my code, you should be able to enter the IMS-Starter project, and open a gitBash terminal. Type in "mvn clean package" to build a new fatjar, and run with only the commands "java -jar ims-0.0.1-jar-with-dependencies".  This will open my java executable in a console for you to interact with. All methods function, and all options are supported by robust user-error capture and return.
 
 ## Running the tests
 
@@ -25,12 +29,8 @@ In each case, they test that the output of my method matches the expected result
 
 * [Maven](https://maven.apache.org/) - Dependency and Build Management
 * [Jira](https://atlassian.net/jira/) - Kanban board and epic/stories visualisation
-
+* [Git](https://gitforwindows.org/) - Gitbash functionality for command line interface
 * [Github](https://github.com/) - Repository management and integration with Jira for automatic Jira update
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning.
 
 ## Authors
 
