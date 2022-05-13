@@ -1,0 +1,25 @@
+20220513 10:14:47 INFO  [main] ims.IMS IMS.java40 - Welcome to the Inventory Management System!
+20220513 10:14:47 INFO  [main] ims.IMS IMS.java45 - Which entity would you like to use?
+20220513 10:14:47 INFO  [main] domain.Domain Domain.java27 - CUSTOMER: Information about customers
+20220513 10:14:47 INFO  [main] domain.Domain Domain.java27 - ITEM: Individual Items
+20220513 10:14:47 INFO  [main] domain.Domain Domain.java27 - ORDER: Purchases of items
+20220513 10:14:47 INFO  [main] domain.Domain Domain.java27 - STOP: To close the application
+20220513 10:14:53 INFO  [main] ims.IMS IMS.java76 - What would you like to do with customer:
+20220513 10:14:53 INFO  [main] controller.Action Action.java38 - CREATE: To save a new entity into the database
+20220513 10:14:53 INFO  [main] controller.Action Action.java38 - READ: To read an entity from the database
+20220513 10:14:53 INFO  [main] controller.Action Action.java38 - UPDATE: To change an entity already in the database
+20220513 10:14:53 INFO  [main] controller.Action Action.java38 - DELETE: To remove an entity from the database
+20220513 10:14:53 INFO  [main] controller.Action Action.java38 - RETURN: To return to domain selection
+20220513 10:14:55 INFO  [main] controller.CustomerController CustomerController.java36 - id:1 forename:Rowan surname:Baker
+20220513 10:14:55 INFO  [main] ims.IMS IMS.java76 - What would you like to do with customer:
+20220513 10:14:55 INFO  [main] controller.Action Action.java38 - CREATE: To save a new entity into the database
+20220513 10:14:55 INFO  [main] controller.Action Action.java38 - READ: To read an entity from the database
+20220513 10:14:55 INFO  [main] controller.Action Action.java38 - UPDATE: To change an entity already in the database
+20220513 10:14:55 INFO  [main] controller.Action Action.java38 - DELETE: To remove an entity from the database
+20220513 10:14:55 INFO  [main] controller.Action Action.java38 - RETURN: To return to domain selection
+20220513 10:15:01 INFO  [main] ims.IMS IMS.java45 - Which entity would you like to use?
+20220513 10:15:01 INFO  [main] domain.Domain Domain.java27 - CUSTOMER: Information about customers
+20220513 10:15:01 INFO  [main] domain.Domain Domain.java27 - ITEM: Individual Items
+20220513 10:15:01 INFO  [main] domain.Domain Domain.java27 - ORDER: Purchases of items
+20220513 10:15:01 INFO  [main] domain.Domain Domain.java27 - STOP: To close the application
+20220513 10:15:03 INFO  [main] ims.Runner Runner.java13 - SO LONG!

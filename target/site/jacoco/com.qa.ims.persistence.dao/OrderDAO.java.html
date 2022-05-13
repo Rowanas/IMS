@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ims</a> &gt; <a href="index.source.html" class="el_package">com.qa.ims.persistence.dao</a> &gt; <span class="el_source">OrderDAO.java</span></div><h1>OrderDAO.java</h1><pre class="source lang-java linenums">package com.qa.ims.persistence.dao;
+
+import java.sql.Connection;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.qa.ims.persistence.domain.Item;
+import com.qa.ims.persistence.domain.Order;
+
+import com.qa.ims.utils.DBUtils;
+
+public class OrderDAO implements Dao&lt;Order&gt; {
+
+<span class="fc" id="L22">	public static final Logger LOGGER = LogManager.getLogger();</span>
+
+	private CustomerDAO customerDAO;
+	private ItemDAO itemDAO;
+
+	public OrderDAO(CustomerDAO customerDAO, ItemDAO itemDAO) {
+<span class="nc" id="L28">		super();</span>
+<span class="nc" id="L29">		this.customerDAO = customerDAO;</span>
+<span class="nc" id="L30">		this.itemDAO = itemDAO;</span>
+<span class="nc" id="L31">	}</span>
+
+	public OrderDAO() {
+<span class="fc" id="L34">		super();</span>
+<span class="fc" id="L35">	}</span>
+
+	@Override
+	public Order modelFromResultSet(ResultSet resultSet) throws SQLException {
+<span class="nc" id="L39">		Long orderID = resultSet.getLong(&quot;order_id&quot;);</span>
+<span class="nc" id="L40">		Long customerID = resultSet.getLong(&quot;customer_id&quot;);</span>
+<span class="nc" id="L41">		List&lt;Item&gt; items = fetchItems(orderID);</span>
+<span class="nc" id="L42">		return new Order(orderID, customerID, items);</span>
+	}
+
+// created to make an element of my fetchItems work, but eventually phased out as unnecessary with new solution.
+//	public Item itemFromResultSet(ResultSet resultSet) throws SQLException {
+//		String itemName = resultSet.getString(&quot;item_name&quot;);
+//		Double itemPrice = resultSet.getDouble(&quot;item_price&quot;);
+//		return new Item(itemName, itemPrice);
+//	}
+// this implementation of fetchItems appears to be causing my testing to fail, but not sure how I fix it.
+//	Actual method runs fine and does what it's supposed to do, but doesn't play well with the tests I'm running.
+	//It's something about the return, buyt I can't for the life of me fix it.
+	public List&lt;Item&gt; fetchItems(Long orderID) throws SQLException {
+<span class="nc" id="L55">		List&lt;Long&gt; itemsID = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L56">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="nc" id="L57">				PreparedStatement statement = connection</span>
+<span class="nc" id="L58">						.prepareStatement(&quot;SELECT * FROM order_items WHERE order_id = ?&quot;);) {</span>
+<span class="nc" id="L59">			statement.setLong(1, orderID);</span>
+<span class="nc" id="L60">			ResultSet resultSet = statement.executeQuery();</span>
+			{
+<span class="nc bnc" id="L62" title="All 2 branches missed.">				while (resultSet.next()) {</span>
+<span class="nc" id="L63">					itemsID.add(resultSet.getLong(&quot;item_id&quot;));</span>
+				}
+			}
+<span class="nc" id="L66">			List&lt;Item&gt; orderItemList = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">			for (Long i : itemsID) {</span>
+<span class="nc" id="L68">				orderItemList.add(itemDAO.read(i));</span>
+<span class="nc" id="L69">			}</span>
+<span class="nc" id="L70">			return orderItemList;</span>
+		}
+	}
+
+//moved all read items down here, for readability and to keep like-methods grouped.
+
+	@Override
+	public List&lt;Order&gt; readAll() {
+<span class="nc" id="L78">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="nc" id="L79">				Statement statement = connection.createStatement();</span>
+<span class="nc" id="L80">				ResultSet resultSet = statement.executeQuery(&quot;SELECT * FROM orders&quot;);) {</span>
+<span class="nc" id="L81">			List&lt;Order&gt; order = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">			while (resultSet.next()) {</span>
+<span class="nc" id="L83">				order.add(modelFromResultSet(resultSet));</span>
+			}
+<span class="nc" id="L85">			return order;</span>
+<span class="nc" id="L86">		} catch (SQLException e) {</span>
+<span class="nc" id="L87">			LOGGER.debug(e);</span>
+<span class="nc" id="L88">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="nc" id="L90">		return new ArrayList&lt;&gt;();</span>
+	}
+
+	// reads last created order, mainly for readout after create
+	public Order readLatest() {
+<span class="nc" id="L95">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="nc" id="L96">				Statement statement = connection.createStatement();</span>
+<span class="nc" id="L97">				ResultSet resultSet = statement.executeQuery(&quot;SELECT * FROM orders ORDER BY order_id DESC LIMIT 1&quot;);) {</span>
+<span class="nc" id="L98">			resultSet.next();</span>
+<span class="nc" id="L99">			return modelFromResultSet(resultSet);</span>
+<span class="nc" id="L100">		} catch (Exception e) {</span>
+<span class="nc" id="L101">			LOGGER.debug(e);</span>
+<span class="nc" id="L102">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="nc" id="L104">		return null;</span>
+	}
+
+	@Override
+	public Order create(Order order) {
+<span class="nc" id="L109">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="nc" id="L110">				PreparedStatement statement = connection</span>
+<span class="nc" id="L111">						.prepareStatement(&quot;INSERT INTO orders( customer_id) VALUES (?)&quot;);) {</span>
+<span class="nc" id="L112">			statement.setLong(1, order.getCustomerID());</span>
+<span class="nc" id="L113">			statement.executeUpdate();</span>
+<span class="nc" id="L114">			return readLatest();</span>
+<span class="nc" id="L115">		} catch (Exception e) {</span>
+<span class="nc" id="L116">			LOGGER.debug(e);</span>
+<span class="nc" id="L117">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="nc" id="L119">		readLatest();</span>
+<span class="nc" id="L120">		return null;</span>
+	}
+
+	@Override
+	public Order update(Order order) {
+<span class="nc" id="L125">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="nc" id="L126">				PreparedStatement statement = connection.prepareStatement(&quot;UPDATE order_items SET item_id = ?&quot;);) {</span>
+<span class="nc" id="L127">			statement.setObject(1, order.getOrderID());</span>
+<span class="nc" id="L128">			statement.executeUpdate();</span>
+<span class="nc" id="L129">			return read(order.getOrderID());</span>
+<span class="nc" id="L130">		} catch (Exception e) {</span>
+<span class="nc" id="L131">			LOGGER.debug(e);</span>
+<span class="nc" id="L132">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="nc" id="L134">		return null;</span>
+	}
+
+	public Order updateAdd(Long orderID, Long itemID) {
+<span class="nc" id="L138">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="nc" id="L139">				PreparedStatement statement = connection</span>
+<span class="nc" id="L140">						.prepareStatement(&quot;INSERT INTO order_items (order_id, item_id) VALUES(?,?)&quot;);) {</span>
+<span class="nc" id="L141">			statement.setObject(1, orderID);</span>
+<span class="nc" id="L142">			statement.setObject(2, itemID);</span>
+<span class="nc" id="L143">			statement.executeUpdate();</span>
+<span class="nc" id="L144">		} catch (Exception e) {</span>
+<span class="nc" id="L145">			LOGGER.debug(e);</span>
+<span class="nc" id="L146">			LOGGER.error(e.getMessage());</span>
+<span class="nc" id="L147">		}</span>
+<span class="nc" id="L148">		return readLatest();</span>
+	}
+
+	// 10/05 deletes all of an item_id from a given order. Not ideal, but I was so
+	// stuck and I had dogs barking and all sorts. Will return, maybe.
+	// Discovered limit1 which prevents deletion of all items
+	public Order updateRemove(Long orderID, Long itemID) {
+<span class="nc" id="L155">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="nc" id="L156">				PreparedStatement statement = connection</span>
+<span class="nc" id="L157">						.prepareStatement(&quot;DELETE FROM order_items WHERE order_id = ? and item_id = ? LIMIT 1&quot;);) {</span>
+<span class="nc" id="L158">			statement.setObject(1, orderID);</span>
+<span class="nc" id="L159">			statement.setObject(2, itemID);</span>
+<span class="nc" id="L160">			statement.executeUpdate();</span>
+<span class="nc" id="L161">		} catch (Exception e) {</span>
+<span class="nc" id="L162">			LOGGER.error(e.getMessage());</span>
+<span class="nc" id="L163">		}</span>
+<span class="nc" id="L164">		return readLatest();</span>
+	}
+
+	@Override
+	public int delete(long id) {
+<span class="fc" id="L169">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L170">				PreparedStatement statement = connection.prepareStatement(&quot;DELETE FROM orders WHERE order_id = ?&quot;);) {</span>
+<span class="fc" id="L171">			statement.setLong(1, id);</span>
+<span class="fc" id="L172">			return statement.executeUpdate();</span>
+<span class="nc" id="L173">		} catch (Exception e) {</span>
+<span class="nc" id="L174">			LOGGER.debug(e);</span>
+<span class="nc" id="L175">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="nc" id="L177">		return 0;</span>
+	}
+
+	@Override
+	public Order read(Long id) {
+		// TODO Auto-generated method stub
+<span class="nc" id="L183">		return null;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
