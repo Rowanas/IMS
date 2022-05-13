@@ -13,7 +13,7 @@ You will require SQL Workbench to visualise the information in my sql-schema and
 
 ### Building
 
-To build my code, you should be able to enter the IMS-Starter project, and open a gitBash terminal. Type in "mvn clean package" to build a new fatjar, and run with only the commands "java -jar ims-0.0.1-jar-with-dependencies".  This will open my java executable in a console for you to interact with. All methods function, and all options are supported by robust user-error capture and return.
+To build my code, you should be able to enter the IMS-Starter project, and open a gitBash terminal there. Type in "mvn clean package" to build a new fatjar, and run with only the commands "java -jar ims-0.0.1-jar-with-dependencies".  This will open my java executable in a console for you to interact with. All methods function, and all options are supported by robust user-error capture and return.
 
 ## Running the tests
 
@@ -31,6 +31,7 @@ In each case, they test that the output of my method matches the expected result
 * [Jira](https://atlassian.net/jira/) - Kanban board and epic/stories visualisation
 * [Git](https://gitforwindows.org/) - Gitbash functionality for command line interface
 * [Github](https://github.com/) - Repository management and integration with Jira for automatic Jira update
+* [Confluence](https://rowanatwork.atlassian.net/wiki/spaces/~62751f6c7dd556006afefebc/pages/196609/Week+5+Project+Risk+Matrix) - Additional pages for risk matrices and further documentation
 
 ## Authors
 
