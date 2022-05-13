@@ -47,20 +47,18 @@ public class OrderDAO implements Dao<Order> {
 //		Double itemPrice = resultSet.getDouble("item_price");
 //		return new Item(itemName, itemPrice);
 //	}
-
+	
+//my code wasn't working in testing, and caused 	
 	public List<Item> fetchItems(Long orderID) throws SQLException {
 		List<Long> itemsID = new ArrayList<>();
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
 						.prepareStatement("SELECT * FROM order_items WHERE order_id = ?");) {
 			statement.setLong(1,  orderID);
-			try (ResultSet resultSet = statement.executeQuery();) {
+			ResultSet resultSet = statement.executeQuery(); {
 				while (resultSet.next()) {
 					itemsID.add(resultSet.getLong("item_id"));
 				}
-			} catch (Exception e) {
-				LOGGER.debug(e);
-				LOGGER.error(e.getMessage());
 			}
 			List<Item> orderItemList = new ArrayList<>();
 			for (Long i : itemsID) {

@@ -64,6 +64,7 @@ public class OrderController implements CrudController<Order> {
 		Long id = utils.getLong();
 		return orderDAO.delete(id);
 	}
+
 //rewrote with toLowerCase and more elegant execution than multiple cases
 //to my knowledge, I am the only person to use switch cases, and testing it is
 // becoming difficult.
@@ -80,7 +81,8 @@ public class OrderController implements CrudController<Order> {
 			orderDAO.updateAdd(orderID, itemID);
 			LOGGER.info("Order Updated");
 			break;
-// For some reason, my Add code threw no errors, but my remove code did. Odd behaviour.			
+// For some reason, my Add code threw no errors, but my remove code did. Odd behaviour.
+// Got it fixed eventually, of course.
 		case "remove":
 			LOGGER.info("Please enter an item ID");
 			itemID = utils.getLong();
@@ -92,6 +94,8 @@ public class OrderController implements CrudController<Order> {
 			LOGGER.info("Please enter Add or Remove, lower or uppercase");
 
 		}
-		return null;
+// I hunted and hunted for what would make this return a value for my tests,
+// what am I missing?
+		return orderDAO.readLatest();
 	}
 }

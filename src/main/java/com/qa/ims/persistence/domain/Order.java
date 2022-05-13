@@ -36,7 +36,10 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return "Order [orderID=" + orderID + ", customerID=" + customerID + ", items=" + items + "]";
+		double totalPrice = 0;
+				for (Item i : items)
+					totalPrice += i.getItemPrice();
+		return "Order [orderID=" + orderID + ", customerID=" + customerID + ", items=" + items + "]\n OrderTotal = £" + totalPrice;
 	}
 
 	public Long getOrderID() {
@@ -53,6 +56,14 @@ public class Order {
 
 	public void setCustomerID(Long customerID) {
 		this.customerID = customerID;
+	}
+
+	public List<Item> getItems() {
+		return items;
+	}
+
+	public void setItems(List<Item> items) {
+		this.items = items;
 	}
 
 	@Override

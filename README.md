@@ -1,64 +1,33 @@
-Coverage: 34%
-# Project Title
+Coverage: 64.7%
+# Week 5 IMS Project
 
-One Paragraph of project description goes here
+This is my week 5 solo project on the QA training course. It involved setting up a database with tables for customers, items and orders, and necessitated a go-between table, order_items to handle an items-orders many to many relationship. Code to produce a variety functions was needed through Java, and connections required to link the two.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+I have compiled my code into a FatJar for your convenience. You should only need to open up the file wherever you have downloaded it, and double click on the .jar file.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
+You will require SQL workbench to visualise the information in my sql-schema and sql-data files, though you can open these in your preferred IDE if you prefer. For testing, Maven will be required.
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
 
-Say what the step will be
 
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
 
 ## Running the tests
 
-Explain how to run the automated tests for this system. Break down into which tests and what they do
+In order to run tests for my code, you can open the code in your preferred IDE and navigate to the top level of the src/test/java file. In Eclipse, you can then "Launch java" and it will run automated tests. For coverage details, you will also need to view coverage history, which in Eclipse, is in the Run dropdown.
+
+
 
 ### Unit Tests 
 
-Explain what these tests test, why and how to run them
+I tested all of my core files. There are basic tests for my Customer, Order and Item classes, plus further tests for the CRUD functions in the Controllers and additional tests for each of my methodes in the DAOs for each class.
 
-```
-Give an example
-```
+In each case, they test that the output of my method matches the expected result in order to check that the method is performing its function correctly.
 
-### Integration Tests 
-Explain what these tests test, why and how to run them
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
 
 ## Deployment
 
@@ -66,12 +35,9 @@ Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-* [Maven](https://maven.apache.org/) - Dependency Management
-
-## Built With
-
+* [Maven](https://maven.apache.org/) - Dependency and Build Management
 * [Jira](https://atlassian.net/jira/) - Kanban board and epic/stories visualisation
-* [Github](https://github.com/) - Repository management and integration with jira for automatic Jira update
+* [Github](https://github.com/) - Repository management and integration with Jira for automatic Jira update
 
 ## Versioning
 
@@ -80,15 +46,14 @@ We use [SemVer](http://semver.org/) for versioning.
 ## Authors
 
 * **Chris Perrins** - *Initial work* - [christophperrins](https://github.com/christophperrins)
+* **Rowan Baker** - *Finished Project and additional resources* - [Rowanas](https://github.com/Rowanas)
 
 ## License
 
 This project is licensed under the MIT license - see the [LICENSE.md](LICENSE.md) file for details 
 
-*For help in [Choosing a license](https://choosealicense.com/)*
-
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* As will likely be the case for any of my work going forward, a huge tip of the hat to the stackExchange community, whose years of questions provided many useful fixes.
+* To Earl for teaching me many of the background technologies I used, and Pawel, whose skill and patience has turned Java from a language I despise into a language I can use.
+* To the companionship and good humour of the rest of the 22AprEnable2 cohort, without which I would not have been able to push on to the project's end.

@@ -17,3 +17,15 @@ Initial checks
 The customer controller tests work fine, but the customer DAO doesn't. Not finding column, checked names and seems fine, suspect not connecting to DB properly.
 
 Fix
+Mix of misname and undropped tables. Should be in temp table, but running tests off of primary table apparently, causing issue. Now resolved with pre-test drop table.
+_____________________________________________________________________________
+
+Unsupported class file major version 60
+
+Initial Checks
+Googled, seems to suggest jav is not correct version? Will ask Pawel for guidance.
+
+Fix
+
+___________________________________________________________________________
+
