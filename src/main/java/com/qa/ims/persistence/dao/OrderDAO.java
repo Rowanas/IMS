@@ -38,24 +38,27 @@ public class OrderDAO implements Dao<Order> {
 	public Order modelFromResultSet(ResultSet resultSet) throws SQLException {
 		Long orderID = resultSet.getLong("order_id");
 		Long customerID = resultSet.getLong("customer_id");
-		List <Item> items = fetchItems(orderID);
+		List<Item> items = fetchItems(orderID);
 		return new Order(orderID, customerID, items);
 	}
-//
+
+// created to make an element of my fetchItems work, but eventually phased out as unnecessary with new solution.
 //	public Item itemFromResultSet(ResultSet resultSet) throws SQLException {
 //		String itemName = resultSet.getString("item_name");
 //		Double itemPrice = resultSet.getDouble("item_price");
 //		return new Item(itemName, itemPrice);
 //	}
-	
-//my code wasn't working in testing, and caused 	
+// this implementation of fetchItems appears to be causing my testing to fail, but not sure how I fix it.
+//	Actual method runs fine and does what it's supposed to do, but doesn't play well with the tests I'm running.
+	//It's something about the return, buyt I can't for the life of me fix it.
 	public List<Item> fetchItems(Long orderID) throws SQLException {
 		List<Long> itemsID = new ArrayList<>();
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
 						.prepareStatement("SELECT * FROM order_items WHERE order_id = ?");) {
-			statement.setLong(1,  orderID);
-			ResultSet resultSet = statement.executeQuery(); {
+			statement.setLong(1, orderID);
+			ResultSet resultSet = statement.executeQuery();
+			{
 				while (resultSet.next()) {
 					itemsID.add(resultSet.getLong("item_id"));
 				}
@@ -69,7 +72,6 @@ public class OrderDAO implements Dao<Order> {
 	}
 
 //moved all read items down here, for readability and to keep like-methods grouped.
-//reads one specific order
 
 	@Override
 	public List<Order> readAll() {
@@ -148,7 +150,7 @@ public class OrderDAO implements Dao<Order> {
 
 	// 10/05 deletes all of an item_id from a given order. Not ideal, but I was so
 	// stuck and I had dogs barking and all sorts. Will return, maybe.
-	// Discovered limit1 which prevents deletion of all problems
+	// Discovered limit1 which prevents deletion of all items
 	public Order updateRemove(Long orderID, Long itemID) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection

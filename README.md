@@ -9,18 +9,11 @@ I have compiled my code into a FatJar for your convenience. You should only need
 
 ### Prerequisites
 
-You will require SQL workbench to visualise the information in my sql-schema and sql-data files, though you can open these in your preferred IDE if you prefer. For testing, Maven will be required.
-
-### Installing
-
-
-
+You will require SQL Workbench to visualise the information in my sql-schema and sql-data files, though you can open these in your preferred IDE if you prefer. For testing, Maven will be required.
 
 ## Running the tests
 
 In order to run tests for my code, you can open the code in your preferred IDE and navigate to the top level of the src/test/java file. In Eclipse, you can then "Launch java" and it will run automated tests. For coverage details, you will also need to view coverage history, which in Eclipse, is in the Run dropdown.
-
-
 
 ### Unit Tests 
 
@@ -28,15 +21,11 @@ I tested all of my core files. There are basic tests for my Customer, Order and 
 
 In each case, they test that the output of my method matches the expected result in order to check that the method is performing its function correctly.
 
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
 ## Built With
 
 * [Maven](https://maven.apache.org/) - Dependency and Build Management
 * [Jira](https://atlassian.net/jira/) - Kanban board and epic/stories visualisation
+
 * [Github](https://github.com/) - Repository management and integration with Jira for automatic Jira update
 
 ## Versioning

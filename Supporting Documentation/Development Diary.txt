@@ -22,3 +22,15 @@ Began work again, after having quick check of orders, I decided to move to testi
 Making good progress on testing on new branch.
 
 Rebuilt to test, everything broken. Not the end of the world though. After lunch, Pawel demonstrated solution using Eclipse-Maven-update
+
+11/05/2022 END OF DAY SUMMARY
+Making progress. Slow, painful progress. Conversation with Pawel has shown weakness in my implmentation logic. Reworking required, but it's starting to show improvement, and Order methods are no longer failing, they just don't do anything.
+
+12/05/2022
+Continued work, some documentation changes required, but need to get code working first. Small changes.
+
+Got code working. i had written the create function, I had set up the read to tables, but I hadn't linked the two in my DAO.
+
+12/05/2022 END OF DAY SUMMARY
+It works! It all works! My order code wasn't working because I had skipped from one place to another in my code and skipped out on the DAO middlemethod.
+

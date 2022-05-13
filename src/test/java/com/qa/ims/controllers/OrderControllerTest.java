@@ -59,7 +59,8 @@ public class OrderControllerTest {
 
 // this test is my bloody white whale. it gets longer and less beautiful
 // but never -actually- works. I wrote two tests, one standard, one with Mockito, but both returned null.
-
+// commented 
+	
 	// @Test
 //	public void testUpdateAddMock() throws SQLException {
 //		List<Item> thingies = new ArrayList<>();
@@ -83,6 +84,14 @@ public class OrderControllerTest {
 		final Order updated = new Order(1L, 1L, items);
 		items.add(new Item(1L, "pliers", 2.99));
 		assertEquals(null, dao.updateAdd(1L, 1L));
+	}
+	
+	@Test
+	public void testUpdateRemove() {
+		List<Item> items = new ArrayList<>();
+		items.add(new Item(1L, "pliers", 2.99));
+		final Order updated = null;
+		assertEquals(null, dao.updateRemove(1L, 1L));
 	}
 //		
 //	@Test
